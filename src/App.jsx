@@ -11,9 +11,19 @@ function App() {
   }, []);
 
   const fetchTasks = async () => {
-    const res = await fetch("/api/tasks");
-    const data = await res.json();
-    setTasks(data);
+    try {
+      const res = await fetch("/api/tasks");
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setTasks(data);
+      } else {
+        console.error("La réponse n'est pas un tableau", data);
+        setTasks([]); // Ou gérez l'erreur autrement
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des tâches :", error);
+      setTasks([]); // Ou gérez l'erreur autrement
+    }
   };
 
   // Fonction pour ajouter une nouvelle tâche
